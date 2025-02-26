@@ -7,7 +7,7 @@
 COMMON_PATH := device/xiaomi/sm8150-common
 
 # A/B
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 AB_OTA_UPDATER := true
 
@@ -64,7 +64,7 @@ TARGET_CAMERA_OVERRIDE_FORMAT_FROM_RESERVED := true
 TARGET_CAMERA_PACKAGE_NAME := com.xiaomi.sessionparams.clientName
 
 # Display
-ifeq ($(TARGET_HAS_UDFPS),true)
+ifeq ($(strip $(TARGET_HAS_UDFPS)),true)
 TARGET_USES_FOD_ZPOS := true
 endif
 
@@ -72,7 +72,7 @@ endif
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
 
 # Fingerprint
-ifeq ($(TARGET_HAS_UDFPS),true)
+ifeq ($(strip $(TARGET_HAS_UDFPS)),true)
 TARGET_SURFACEFLINGER_UDFPS_LIB := //hardware/xiaomi:libudfps_extension.xiaomi
 endif
 
@@ -81,7 +81,7 @@ TARGET_INIT_VENDOR_LIB ?= //$(COMMON_PATH):init_xiaomi_msmnile
 TARGET_RECOVERY_DEVICE_MODULES ?= init_xiaomi_msmnile
 
 # Kernel
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 BOARD_BOOT_HEADER_VERSION := 3
 else
 BOARD_BOOT_HEADER_VERSION := 2
@@ -91,7 +91,7 @@ BOARD_KERNEL_PAGESIZE := 4096
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 msm_rtb.filter=0x237 service_locator.enable=1 swiotlb=2048 loop.max_part=7 androidboot.usbcontroller=a600000.dwc3
 BOARD_KERNEL_CMDLINE += androidboot.fstab_suffix=qcom
 BOARD_KERNEL_CMDLINE += androidboot.init_fatal_reboot_target=recovery
-ifneq ($(TARGET_IS_LEGACY),true)
+ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 BOARD_KERNEL_IMAGE_NAME := Image
 else
 BOARD_KERNEL_IMAGE_NAME := Image.gz
@@ -114,10 +114,10 @@ TARGET_USES_ION := true
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728
 BOARD_DTBOIMG_PARTITION_SIZE := 33554432
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 100663296
 else
-ifneq ($(TARGET_IS_LEGACY),true)
+ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 134217728
 BOARD_CACHEIMAGE_PARTITION_SIZE := 402653184
 else
@@ -143,7 +143,7 @@ $(foreach p, $(call to-upper, $(ALL_PARTITIONS)), \
     $(eval TARGET_COPY_OUT_$(p) := $(call to-lower, $(p))))
 
 # Partitions - dynamic
-ifneq ($(TARGET_IS_LEGACY),true)
+ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 BOARD_SUPER_PARTITION_SIZE := 9126805504
 BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 9122611200 # (BOARD_SUPER_PARTITION_SIZE - 4MiB)
 else
@@ -170,15 +170,15 @@ TARGET_BOARD_PLATFORM := msmnile
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor.prop
-ifneq ($(TARGET_IS_TABLET),true)
+ifneq ($(strip $(TARGET_IS_TABLET)),true)
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor_phone.prop
 endif
 
 # Recovery
 BOARD_INCLUDE_RECOVERY_DTBO := true
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_AB.qcom
-else ifneq ($(TARGET_IS_LEGACY),true)
+else ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_dynamic.qcom
 else
 TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_legacy.qcom
@@ -194,9 +194,9 @@ TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
 ENABLE_VENDOR_RIL_SERVICE := true
 
 # Rootdir
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 SOONG_CONFIG_XIAOMI_MSMNILE_PARTITION_SCHEME := vab
-else ifneq ($(TARGET_IS_LEGACY),true)
+else ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 SOONG_CONFIG_XIAOMI_MSMNILE_PARTITION_SCHEME := dynamic
 else
 SOONG_CONFIG_XIAOMI_MSMNILE_PARTITION_SCHEME := legacy
@@ -234,14 +234,14 @@ BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
-ifneq ($(TARGET_IS_LEGACY),true)
+ifneq ($(strip $(TARGET_IS_LEGACY)),true)
 BOARD_AVB_VBMETA_SYSTEM := $(SSI_PARTITIONS)
 BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA4096
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 1
 endif
-ifeq ($(TARGET_IS_VAB),true)
+ifeq ($(strip $(TARGET_IS_VAB)),true)
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 endif
 
@@ -251,10 +251,10 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml \
     vendor/lineage/config/device_framework_matrix.xml
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/hidl/manifest.xml
-ifeq ($(TARGET_HAS_FM),true)
+ifeq ($(strip $(TARGET_HAS_FM)),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/hidl/manifest_fm.xml
 endif
-ifneq ($(TARGET_IS_TABLET),true)
+ifneq ($(strip $(TARGET_IS_TABLET)),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/configs/hidl/manifest_phone.xml
 endif
 DEVICE_MATRIX_FILE += hardware/qcom-caf/common/compatibility_matrix.xml
