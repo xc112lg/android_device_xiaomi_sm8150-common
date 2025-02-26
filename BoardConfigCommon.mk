@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
+$(info TARGET_IS_LEGACY=$(TARGET_IS_LEGACY))
 COMMON_PATH := device/xiaomi/sm8150-common
 
 # A/B
