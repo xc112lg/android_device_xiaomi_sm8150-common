@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
+BUILD_DATETIME_FROM_FILE := $(shell echo $(python3 -c 'import time; print(int(time.time()))'))
 
 COMMON_PATH := device/xiaomi/sm8150-common
 
